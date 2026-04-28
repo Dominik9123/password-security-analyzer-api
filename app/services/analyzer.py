@@ -11,6 +11,8 @@ def load_weak_passwords() -> list:
         with open(WEAK_PASSWORDS_FILE, "r") as file:
             return [line.strip().lower() for line in file if line.strip()]
     except FileNotFoundError:
+        # PL: Brak pliku nie zatrzymuje aplikacji, tylko wylacza dodatkowe wzorce.
+        # EN: A missing file does not stop the app, it only disables extra patterns.
         return []
 
 
@@ -88,6 +90,8 @@ def analyze_password(password: str) -> dict:
             break
 
     if re.search(r"(.)\1{2,}", password):
+        # PL: Ten regex wykrywa trzy lub wiecej takie same znaki pod rzad.
+        # EN: This regex finds three or more repeated characters in a row.
         score -= 10
         issues.append("Password contains repeated characters.")
         suggestions.append("Avoid repeated characters like aaa or 111.")
@@ -104,6 +108,8 @@ def analyze_password(password: str) -> dict:
         issues.append("Password entropy is low.")
         suggestions.append("Use a longer and more diverse password.")
 
+    # PL: Wynik ograniczamy do 0-100, zeby API zawsze zwracalo przewidywalna skale.
+    # EN: The score is clamped to 0-100 so the API always returns a predictable scale.
     score = max(0, min(score, 100))
 
     if score >= 80:

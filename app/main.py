@@ -10,6 +10,8 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# PL: CORS pozwala frontendowi z osobnego adresu/Live Servera laczyc sie z API.
+# EN: CORS lets the frontend served from Live Server call this API.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,4 +20,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# PL: Wszystkie endpointy aplikacji sa dostepne pod wspolnym prefiksem /api.
+# EN: All application endpoints are grouped under the shared /api prefix.
 app.include_router(router, prefix="/api")

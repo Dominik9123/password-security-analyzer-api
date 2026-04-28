@@ -143,3 +143,115 @@ Testy sprawdzają logikę analizatora, generator haseł i główne endpointy API
 - dłuższa lista słabych haseł,
 - integracja z bazą wycieków haseł,
 - dokładniejszy algorytm oceny.
+
+## English
+
+Password Security Analyzer API is a small FastAPI project for checking password strength. It scores a password from 0 to 100, estimates entropy, returns issues and suggestions, generates random passwords and compares two passwords.
+
+Raw passwords are not stored in history. The backend saves only analysis metadata, such as password length, score, strength level and entropy.
+
+## Features
+
+- password analysis with `weak`, `medium` and `strong` classification,
+- checks for length, digits, lowercase letters, uppercase letters and special characters,
+- detection of simple weak patterns from `weak_passwords.txt`,
+- detection of repeated characters, for example `aaa` or `111`,
+- password generation with selected length,
+- comparison of two passwords,
+- analysis history without storing raw passwords,
+- simple frontend in the `frontend` directory.
+
+## Technologies
+
+- Python
+- FastAPI
+- Pydantic
+- Uvicorn
+- Pytest
+- HTML, CSS, JavaScript
+
+## Running The Project
+
+Create and activate a virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Windows PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Start the API:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+The API will be available at:
+
+```text
+http://127.0.0.1:8000/api/
+```
+
+Swagger documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+The frontend can be opened from `frontend/index.html`, for example with VS Code Live Server.
+
+Note: password analysis updates `app/data/history.json`. If you use Live Server, `.vscode/settings.json` ignores this file so the page does not refresh after every analysis.
+
+## API Endpoints
+
+| Method | Endpoint                  | Description |
+| ------ | ------------------------- | ----------- |
+| GET    | `/api/`                   | Checks whether the API is running |
+| POST   | `/api/analyze`            | Analyzes one password |
+| GET    | `/api/generate?length=16` | Generates a password |
+| GET    | `/api/tips`               | Returns simple password tips |
+| GET    | `/api/history`            | Returns analysis history |
+| POST   | `/api/compare`            | Compares two passwords |
+
+## Example
+
+```http
+POST /api/analyze
+Content-Type: application/json
+```
+
+```json
+{
+  "password": "StrongPassword123!"
+}
+```
+
+Example response:
+
+```json
+{
+  "score": 90,
+  "strength": "strong",
+  "entropy": 104.92,
+  "issues": [],
+  "suggestions": []
+}
+```
+
+## Tests
+
+```bash
+pytest
+```
+
+The tests cover the analyzer logic, password generator and main API endpoints.

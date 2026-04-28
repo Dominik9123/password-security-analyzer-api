@@ -15,6 +15,8 @@ const compareResult = document.getElementById("compareResult");
 
 
 function showResult(element, content) {
+    // PL: Kazdy wynik trafia do gotowego kontenera bez przeladowania strony.
+    // EN: Each result is rendered into the existing container without reloading the page.
     element.classList.remove("hidden");
     element.innerHTML = content;
 }
@@ -36,6 +38,8 @@ function getStrengthClass(strength) {
 function formatAnalysisResult(data) {
     const strengthClass = getStrengthClass(data.strength);
 
+    // PL: Najwazniejsze metryki sa w jednym wierszu, zeby wynik byl bardziej kompaktowy.
+    // EN: Main metrics stay in one row to keep the result panel compact.
     return `
         <div class="result-summary">
             <span><strong>Score:</strong> ${data.score}/100</span>
@@ -58,6 +62,8 @@ analyzeBtn.addEventListener("click", async (event) => {
     event.preventDefault();
 
     try {
+        // PL: Haslo jest wysylane do lokalnego API tylko w celu analizy.
+        // EN: The password is sent to the local API only for analysis.
         const response = await fetch(`${API_URL}/analyze`, {
             method: "POST",
             headers: {
