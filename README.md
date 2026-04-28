@@ -1,5 +1,11 @@
 # Password Security Analyzer API
 
+[![Run Python Tests](https://github.com/Dominik9123/password-security-analyzer-api/actions/workflows/tests.yml/badge.svg)](https://github.com/Dominik9123/password-security-analyzer-api/actions/workflows/tests.yml)
+
+Professional FastAPI-based password security analysis tool with password strength scoring, entropy calculation, secure password generation, comparison tools, history tracking, frontend UI, and automated testing.
+
+# Password Security Analyzer API
+
 Prosty projekt w FastAPI do sprawdzania siły hasła. Aplikacja potrafi ocenić hasło w skali 0-100, policzyć przybliżoną entropię, wskazać problemy, wygenerować losowe hasło i porównać dwa hasła ze sobą.
 
 Hasła nie są zapisywane w historii. Backend przechowuje tylko metadane analizy, takie jak długość hasła, wynik, poziom siły i entropia.
