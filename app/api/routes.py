@@ -1,37 +1,48 @@
-from fastapi import APIRouter
-from app.models.schemas import PasswordRequest, ComparePasswordsRequest
+from fastapi import APIRouter, HTTPException
+
+from app.models.schemas import ComparePasswordsRequest, PasswordRequest
 from app.services.analyzer import analyze_password
 from app.services.generator import generate_password
-from app.services.history import save_analysis, get_history
+from app.services.history import get_history, save_analysis
+
 
 router = APIRouter()
 
 
 @router.get("/")
 def root():
-    """PL: Endpoint kontrolny API. EN: Basic health/status endpoint."""
+    """Simple API health check."""
     return {"message": "Password Security Analyzer API is running"}
 
 
 @router.post("/analyze")
 def analyze(request: PasswordRequest):
-    """PL: Analizuje siłę hasła i zapisuje wynik bez przechowywania hasła.
-    EN: Analyzes password strength and stores the result without saving the password.
-    """
+    if not request.password.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Password cannot be empty."
+        )
+
     analysis = analyze_password(request.password)
+
+    # PL: Historia zapisuje tylko metadane analizy, bez jawnej wartosci hasla.
+    # EN: History stores only analysis metadata, not the raw password value.
     save_analysis(request.password, analysis)
+
     return analysis
 
 
 @router.get("/generate")
 def generate(length: int = 16):
-    """PL: Generuje losowe hasło o podanej długości. EN: Generates a random password of the requested length."""
-    return {"password": generate_password(length)}
+    try:
+        return {"password": generate_password(length)}
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error))
 
 
 @router.get("/tips")
 def get_tips():
-    """PL: Zwraca podstawowe zalecenia bezpieczeństwa haseł. EN: Returns basic password security tips."""
+    """Return a short list of password safety tips."""
     return {
         "tips": [
             "Use at least 12 characters.",
@@ -45,20 +56,21 @@ def get_tips():
 
 @router.get("/history")
 def history():
-    """PL: Zwraca historię analiz bez jawnych wartości haseł. EN: Returns analysis history without raw passwords."""
+    """Return previous analyses without storing raw passwords."""
     return {"history": get_history()}
 
 
 @router.post("/compare")
 def compare_passwords(request: ComparePasswordsRequest):
-    """PL: Porównuje dwa hasła na podstawie wyniku punktowego.
-    EN: Compares two passwords using the calculated score.
-    """
+    if not request.first_password.strip() or not request.second_password.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Both passwords must be provided."
+        )
+
     first_analysis = analyze_password(request.first_password)
     second_analysis = analyze_password(request.second_password)
 
-    # PL: Hasło z wyższym wynikiem jest uznawane za silniejsze.
-    # EN: The password with the higher score is considered stronger.
     if first_analysis["score"] > second_analysis["score"]:
         stronger_password = "first_password"
     elif second_analysis["score"] > first_analysis["score"]:

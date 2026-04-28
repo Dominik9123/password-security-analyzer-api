@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Security Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <h1>Password Security Analyzer</h1>
+            <p>Analyze, generate and compare password strength using a FastAPI backend.</p>
+        </header>
+
+        <section class="card">
+            <h2>Analyze Password</h2>
+
+            <div class="form-group">
+                <label for="passwordInput">Password</label>
+                <input 
+                    type="password" 
+                    id="passwordInput" 
+                    placeholder="Enter password to analyze"
+                    autocomplete="new-password"
+                    spellcheck="false"
+                >
+            </div>
+
+            <button id="analyzeBtn" type="button">Analyze Password</button>
+
+            <div id="analysisResult" class="result-box hidden"></div>
+        </section>
+
+        <section class="card">
+            <h2>Generate Password</h2>
+
+            <div class="form-group">
+                <label for="passwordLength">Password length</label>
+                <input type="number" id="passwordLength" value="16" min="8" max="64">
+            </div>
+
+            <button id="generateBtn" type="button">Generate Password</button>
+
+            <div id="generatedPassword" class="result-box hidden"></div>
+        </section>
+
+        <section class="card">
+            <h2>Compare Passwords</h2>
+
+            <div class="form-group">
+                <label for="firstPassword">First password</label>
+                <input 
+                    type="password" 
+                    id="firstPassword" 
+                    placeholder="Enter first password"
+                    autocomplete="new-password"
+                    spellcheck="false"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="secondPassword">Second password</label>
+                <input 
+                    type="password" 
+                    id="secondPassword" 
+                    placeholder="Enter second password"
+                    autocomplete="new-password"
+                    spellcheck="false"
+                >
+            </div>
+
+            <button id="compareBtn" type="button">Compare Passwords</button>
+
+            <div id="compareResult" class="result-box hidden"></div>
+        </section>
+
+        <section class="card">
+            <h2>Security Tips</h2>
+
+            <ul class="tips-list">
+                <li>Use at least 12 characters.</li>
+                <li>Use lowercase and uppercase letters.</li>
+                <li>Add numbers and special characters.</li>
+                <li>Avoid common passwords and predictable patterns.</li>
+                <li>Do not reuse passwords across multiple websites.</li>
+            </ul>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

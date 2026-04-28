@@ -1,0 +1,154 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f3f5f9;
+    color: #1f2937;
+    line-height: 1.5;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.header p {
+    color: #6b7280;
+}
+
+.card {
+    background: #ffffff;
+    padding: 20px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+    margin-bottom: 18px;
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+button {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+.result-box {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.result-box p {
+    margin: 8px 0 4px;
+}
+
+.result-box ul {
+    margin: 0 0 8px 18px;
+}
+
+.result-box li {
+    margin-bottom: 2px;
+}
+
+.result-box h3 {
+    margin: 12px 0 6px;
+    font-size: 16px;
+}
+
+.result-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-bottom: 8px;
+}
+
+.hidden {
+    display: none;
+}
+
+.tips-list {
+    padding-left: 20px;
+}
+
+.tips-list li {
+    margin-bottom: 8px;
+}
+
+.strong {
+    color: #15803d;
+    font-weight: bold;
+}
+
+.medium {
+    color: #ca8a04;
+    font-weight: bold;
+}
+
+.weak {
+    color: #dc2626;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .header h1 {
+        font-size: 28px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+}

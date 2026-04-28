@@ -1,0 +1,6 @@
+{
+    "liveServer.settings.ignoreFiles": [
+        ".vscode/**",
+        "**/app/data/history.json"
+    ]
+}
