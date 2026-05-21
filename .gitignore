@@ -4,3 +4,7 @@ __pycache__/
 .pytest_cache/
 app/data/history.json
 .env
+.pytest-tmp/
+.pytest-run/
+pytest-run/
+test-artifacts/

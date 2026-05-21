@@ -5,7 +5,6 @@ from app.services.analyzer import analyze_password
 from app.services.generator import generate_password
 from app.services.history import get_history, save_analysis
 
-
 router = APIRouter()
 
 
@@ -17,8 +16,7 @@ def root():
 
 @router.post("/analyze")
 def analyze(request: PasswordRequest):
-    # PL: strip() blokuje hasla zlozone tylko ze spacji.
-    # EN: strip() rejects passwords made only from spaces.
+    # Reject values that contain only whitespace.
     if not request.password.strip():
         raise HTTPException(
             status_code=400,
@@ -27,21 +25,31 @@ def analyze(request: PasswordRequest):
 
     analysis = analyze_password(request.password)
 
-    # PL: Historia zapisuje tylko metadane analizy, bez jawnej wartosci hasla.
-    # EN: History stores only analysis metadata, not the raw password value.
+    # Store only analysis metadata, never the raw password.
     save_analysis(request.password, analysis)
 
     return analysis
 
 
 @router.get("/generate")
-def generate(length: int = 16):
+def generate(
+    length: int = 16,
+    include_numbers: bool = True,
+    include_symbols: bool = True,
+    avoid_ambiguous: bool = False,
+):
     try:
-        return {"password": generate_password(length)}
+        return {
+            "password": generate_password(
+                length=length,
+                include_numbers=include_numbers,
+                include_symbols=include_symbols,
+                avoid_ambiguous=avoid_ambiguous,
+            )
+        }
     except ValueError as error:
-        # PL: Bledy walidacji z serwisu zwracamy jako czytelne 400 Bad Request.
-        # EN: Service validation errors are returned as readable 400 Bad Request responses.
-        raise HTTPException(status_code=400, detail=str(error))
+        # Return service validation errors as clear bad requests.
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @router.get("/tips")
@@ -66,8 +74,7 @@ def history():
 
 @router.post("/compare")
 def compare_passwords(request: ComparePasswordsRequest):
-    # PL: Porownanie ma sens tylko wtedy, gdy oba pola faktycznie zawieraja haslo.
-    # EN: Comparison only makes sense when both fields contain real password values.
+    # Both fields must contain a real password value before comparison.
     if not request.first_password.strip() or not request.second_password.strip():
         raise HTTPException(
             status_code=400,
@@ -77,8 +84,7 @@ def compare_passwords(request: ComparePasswordsRequest):
     first_analysis = analyze_password(request.first_password)
     second_analysis = analyze_password(request.second_password)
 
-    # PL: Silniejsze haslo wybieramy po wyniku punktowym z analizatora.
-    # EN: The stronger password is selected by the analyzer score.
+    # Use the analyzer score as the comparison source of truth.
     if first_analysis["score"] > second_analysis["score"]:
         stronger_password = "first_password"
     elif second_analysis["score"] > first_analysis["score"]:

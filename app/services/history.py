@@ -2,28 +2,34 @@ import json
 import os
 from datetime import datetime
 
+DEFAULT_HISTORY_FILE = "app/data/history.json"
+HISTORY_FILE_ENV = "PASSWORD_HISTORY_FILE"
+MAX_HISTORY_RECORDS = 20
 
-HISTORY_FILE = "app/data/history.json"
+
+def get_history_file() -> str:
+    return os.getenv(HISTORY_FILE_ENV, DEFAULT_HISTORY_FILE)
 
 
 def load_history() -> list:
-    if not os.path.exists(HISTORY_FILE):
+    history_file = get_history_file()
+
+    if not os.path.exists(history_file):
         return []
 
-    with open(HISTORY_FILE, "r") as file:
+    with open(history_file, encoding="utf-8") as file:
         try:
             return json.load(file)
         except json.JSONDecodeError:
-            # PL: Pusty lub uszkodzony JSON traktujemy jak brak historii.
-            # EN: Empty or corrupted JSON is treated as no history.
+            # Treat an empty or corrupted history file as no history.
             return []
 
 
 def save_analysis(password: str, analysis: dict) -> None:
     history = load_history()
+    history_file = get_history_file()
 
-    # PL: Nie zapisujemy samego hasla, tylko dane potrzebne do historii wynikow.
-    # EN: The raw password is not saved, only data needed for result history.
+    # Save only the metadata needed to show past results.
     record = {
         "timestamp": datetime.now().isoformat(),
         "password_length": len(password),
@@ -33,10 +39,14 @@ def save_analysis(password: str, analysis: dict) -> None:
     }
 
     history.append(record)
+    history = history[-MAX_HISTORY_RECORDS:]
 
-    # PL: indent=4 ulatwia podejrzenie historii podczas prezentacji lub debugowania.
-    # EN: indent=4 keeps the history readable during demos and debugging.
-    with open(HISTORY_FILE, "w") as file:
+    history_directory = os.path.dirname(history_file)
+    if history_directory:
+        os.makedirs(history_directory, exist_ok=True)
+
+    # Keep the file readable for demos and quick debugging.
+    with open(history_file, "w", encoding="utf-8") as file:
         json.dump(history, file, indent=4)
 
 
